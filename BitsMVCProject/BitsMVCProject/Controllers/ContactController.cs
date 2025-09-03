@@ -16,7 +16,7 @@ public class ContactController : Controller
     public async Task<IActionResult> Index()
     {
         var contacts = await _service.GetAllAsync();
-        return View(contacts);
+        return View("~/Views/Contact/Index.cshtml", contacts ?? new List<ContactModel>());
     }
 
     [HttpPost]
@@ -25,7 +25,7 @@ public class ContactController : Controller
         if (file == null || file.Length == 0)
         {
             TempData["Error"] = "Please select a valid CSV file.";
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","Contact");
         }
 
         try
@@ -38,7 +38,7 @@ public class ContactController : Controller
             TempData["Error"] = "An error occurred while importing the CSV file.";
         }
 
-        return RedirectToAction("Index");
+        return RedirectToAction("Index", "Contact");
     }
 
     public async Task<IActionResult> Edit(int id)
@@ -56,7 +56,7 @@ public class ContactController : Controller
         var updated = await _service.UpdateAsync(model);
         if (updated == null) return NotFound();
 
-        return RedirectToAction("Index");
+        return RedirectToAction("Index", "Contact");
     }
 
     [HttpPost]
@@ -65,7 +65,7 @@ public class ContactController : Controller
         var deleted = await _service.DeleteAsync(id);
         if (!deleted) return NotFound();
 
-        return RedirectToAction("Index");
+        return RedirectToAction("Index", "Contact");
     }
 }
 
